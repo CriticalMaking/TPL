@@ -6,6 +6,7 @@
 * Introduction
 This is a very basic set of instructions for preparing 3D-printed visualizations from datasets available through the City of Toronto's [[https://portal0.cf.opendata.inter.sandbox-toronto.ca/][Open Data Portal]]. 
 * Preparation
+- Make sure you have a working Python installation!
 - Download Anaconda (if you don't have a Python installation): https://www.anaconda.com/download/
 - You will need the following Python libraries: pandas, numpy, stat, matplotlib, seaborn, plotly
 - Set up JupyterLab or Jupyter Notebook: https://anaconda.org/conda-forge/jupyterlab
@@ -145,47 +146,48 @@ pvol_jarvis_pm = pvol[['street',
 Create a grouped bar chart using the plotly library:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
-# plotly-based
+#### plotly-based grouped bar charts
+# AM Bathurst
 baseline = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_baseline'],
-    name='PM Spadina Baseline',
+    y=pvol['am_bathurst_baseline'],
+    name='AM Bathurst Baseline',
     hoverinfo='y+name'
 )
 january = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_january'],
-    name='PM Spadina January',
+    y=pvol['am_bathurst_january'],
+    name='AM Bathurst January',
     hoverinfo='y+name'
 )
 february = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_february'],
-    name='PM Spadina February',
+    y=pvol['am_bathurst_february'],
+    name='AM Bathurst February',
     hoverinfo='y+name'
 )
 march = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_march'],
-    name='PM Spadina March',
+    y=pvol['am_bathurst_march'],
+    name='AM Bathurst March',
     hoverinfo='y+name'
 )
 april = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_april'],
-    name='PM Spadina April',
+    y=pvol['am_bathurst_april'],
+    name='AM Bathurst April',
     hoverinfo='y+name'
 )
 may = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_may'],
-    name='PM Spadina May',
+    y=pvol['am_bathurst_may'],
+    name='AM Bathurst May',
     hoverinfo='y+name'
 )
 june = go.Bar(
     x=pvol['street'],
-    y=pvol['pm_spadina_june'],
-    name='PM Spadina June',
+    y=pvol['am_bathurst_june'],
+    name='AM Bathurst June',
     hoverinfo='y+name'
 )
 
@@ -203,6 +205,25 @@ py.iplot(fig, filename='grouped-bar')
 #+END_SRC
 #+RESULTS:
 
+The dataframe provides data for the 7-10 am and 4-7 pm peak periods at the intersections Bathurst, Spadina, Bay, and Jarvis at both King and Queen. Change your arguments accordingly to prepare different charts using plotly.
+
+Using the standard pandas plotting functions (which rely on matplotlib), you can use the following to prepare static charts:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+pvol_bathurst_am.plot.bar(x='street', 
+                           rot=0, 
+                           title='AM Peak Pedestrian Volume Measured at Bathurst');
+#+END_SRC
+#+RESULTS:
+
+If you want horizontal charts, you can chain barh to the plot method:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+pvol_bathurst_am.plot.bar(x='street', 
+                           rot=0, 
+                           title='AM Peak Pedestrian Volume Measured at Bathurst');
+#+END_SRC
+#+RESULTS:
 * Creating Maps
 - GIS for Blender: https://github.com/domlysz/BlenderGIS
 * Modeling
