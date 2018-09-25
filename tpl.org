@@ -211,16 +211,18 @@ Using the standard pandas plotting functions (which rely on matplotlib), you can
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 pvol_bathurst_am.plot.bar(x='street', 
-                           rot=0, 
-                           title='AM Peak Pedestrian Volume Measured at Bathurst');
+                          rot=0,
+                          width=0.85, 
+                          title='AM Peak Pedestrian Volume Measured at Bathurst');
 #+END_SRC
 #+RESULTS:
 
 If you want horizontal charts, you can chain barh to the plot method:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
-pvol_bathurst_am.plot.bar(x='street', 
-                           rot=0, 
+pvol_bathurst_am.plot.barh(x='street', 
+                           rot=0,
+                           width=0.85,
                            title='AM Peak Pedestrian Volume Measured at Bathurst');
 #+END_SRC
 #+RESULTS:
