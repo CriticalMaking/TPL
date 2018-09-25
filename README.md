@@ -1,1 +1,1 @@
-Repository for TPL Open Data Workshop
+Repository for TPL Open Data Workshop. All instructions are in tpl.ipynb which can be viewed here (without graphs) or at http://nbviewer.jupyter.org/github/CriticalMaking/TPL/blob/master/tpl.ipynb (with graphs).
