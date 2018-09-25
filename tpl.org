@@ -23,7 +23,7 @@ Some tips on selecting and preparing your data:
 
 For this exercise, we will be working with pedestrian data from the King Street Pilot Project. All data was scraped from the .pdf reports that the city of Toronto has made available here: https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/king-street-pilot/data-reports-background-materials/
 The data is available in the data directory of the repository that contains this file.  
-* Working with Data in Jupyter
+* Working with Data in a Python/Jupyter Notebook
 
 Import the necessary libraries:
 #+BEGIN_SRC ipython 
@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.plotly as py
 import plotly.graph_objs as go
+from IPython.display import Image
 #+END_SRC
 
 Import your data:
@@ -56,7 +57,7 @@ pvol.set_index('street')
 #+END_SRC
 #+RESULTS:
 
-Create some objects for each street:
+Create some objects for each street. Normally, I wouldn't want such long names (and wide dataframes), but explaining the hows and whys of reshaping data takes too long. If you're interested, read Hadley Wickham's papers on the subject (http://vita.had.co.nz/papers/tidy-data.html) or follow these instructions for reshaping in pandas: https://pandas.pydata.org/pandas-docs/stable/reshaping.html
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 #### am objects
@@ -143,7 +144,7 @@ pvol_jarvis_pm = pvol[['street',
 #+END_SRC
 #+RESULTS:
 
-Create a grouped bar chart using the plotly library:
+Create a grouped bar chart using the plotly library. There are lots of ways to adjust the colours if you want, but I like my charts to look like life savers ;-) 
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 #### plotly-based grouped bar charts
@@ -205,7 +206,7 @@ py.iplot(fig, filename='grouped-bar')
 #+END_SRC
 #+RESULTS:
 
-The dataframe provides data for the 7-10 am and 4-7 pm peak periods at the intersections Bathurst, Spadina, Bay, and Jarvis at both King and Queen. Change your arguments accordingly to prepare different charts using plotly.
+The dataframe provides data for the 7-10 am and 4-7 pm peak periods at the intersections Bathurst, Spadina, Bay, and Jarvis at both King and Queen. Change your arguments accordingly to prepare different charts.
 
 Using the standard pandas plotting functions (which rely on matplotlib), you can prepare bare-bones static charts (use matplotlib or seaborn if you want to customize):
 #+ipynb-newcell
@@ -223,7 +224,8 @@ If you want horizontal charts, you can chain barh to the plot method:
 pvol_bathurst_am.plot.barh(x='street', 
                            rot=0,
                            width=0.85,
-                           title='AM Peak Pedestrian Volume Measured at Bathurst');
+                           title='AM Peak Pedestrian Volume Measured at Bathurst')
+plt.gca().invert_yaxis();
 #+END_SRC
 #+RESULTS:
 * 3D Bars in Blender
@@ -237,7 +239,7 @@ This assumes that you have the csv and bpy modules in your system. Depending on 
 - use the 3Dbars.py script and make sure to import pvol_king.csv and pvol_queen.csv separately
 - export entire block or separate streets as .obj or .stl files
 * Preparing 3D Data Maps
-We are going to work with data from the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#8c732154-5012-9afe-d0cd-ba3ffc813d5a][2016 Neighbourhood Profiles Dataset]]. I've already cleaned and processed the dataset so it will play nice with QGIS. The raw and processed .csv files are in the data directory. 
+We are going to work with data from the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#8c732154-5012-9afe-d0cd-ba3ffc813d5a][2016 Neighbourhood Profiles Dataset]]. Specifically, we will compare population growth between 2011 and 2016 (which comes from the 2016 Census - [[https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/details/page.cfm?Lang=E&Geo1=CSD&Geo2=PR&Code2=01&Data=Count&SearchType=Begins&SearchPR=01&TABID=1&B1=All&Code1=3520005&SearchText=toronto][more info here]]). I've already cleaned and processed the dataset so it will play nice with QGIS. Both the raw and processed .csv files are in the data directory. 
 
 *If you're going to use Excel or Calc, here are some steps to follow:*
 - data setup http://www.qgis.nl/2012/07/13/koppelen-van-data-uit-csv-bestand/?lang=en
@@ -272,7 +274,15 @@ df['2016'] = df['2016'].astype(str).astype(float)
 #+END_SRC
 #+RESULTS:
 
-Use numpy to convert 2016 to square:
+Depending on the data you use, you might have to re-scale to make it printable. Consider the following image:
+
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+Image(filename='images/ladder2.gif') 
+#+END_SRC
+#+RESULTS:
+
+You can use numpy to convert to square root:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 df['2016'] = np.sqrt(df['2016'])
@@ -280,14 +290,14 @@ df.head()
 #+END_SRC
 #+RESULTS:
 
-Use numpy to convert 2011 to logarithmic:
+Or logarithmic:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 df['2011'] = np.log10(df['2011'])
 #+END_SRC
 #+RESULTS:
 
-Output a new data file that can be imported into QGIS:
+When you're done processing, you can output a new .csv for import into QGIS:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 df.to_csv('data/neighbourhood_pop_scaled.csv')
