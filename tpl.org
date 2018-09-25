@@ -40,7 +40,7 @@ Import your data:
 #+ipynb-newcell
 # data import
 #+BEGIN_SRC ipython
-pvol = pd.read_csv('../king/data/king_pedestrian_volume.csv')
+pvol = pd.read_csv('data/king_pedestrian_volume.csv')
 #+END_SRC
 
 Set the figure size for data graphics:
@@ -207,7 +207,7 @@ py.iplot(fig, filename='grouped-bar')
 
 The dataframe provides data for the 7-10 am and 4-7 pm peak periods at the intersections Bathurst, Spadina, Bay, and Jarvis at both King and Queen. Change your arguments accordingly to prepare different charts using plotly.
 
-Using the standard pandas plotting functions (which rely on matplotlib), you can use the following to prepare static charts:
+Using the standard pandas plotting functions (which rely on matplotlib), you can prepare bare-bones static charts (use matplotlib or seaborn if you want to customize):
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 pvol_bathurst_am.plot.bar(x='street', 
@@ -226,12 +226,95 @@ pvol_bathurst_am.plot.barh(x='street',
                            title='AM Peak Pedestrian Volume Measured at Bathurst');
 #+END_SRC
 #+RESULTS:
-* Creating Maps
-- GIS for Blender: https://github.com/domlysz/BlenderGIS
-* Modeling
+* 3D Bars in Blender
+This assumes that you have the csv and bpy modules in your system. Depending on your operating system and Python configuration, you may need to install and configure separately.
+
+- open king_pedestrian_volume.csv in a spreadsheet application (calc or excel) and copy the entire row for queen
+- open a new window/file and paste special with the transpose option to turn your row of data into a column
+- remove the "queen" row at the top, then save as pvol_queen.csv
+- repeat these steps for king
+- in Blender, open up a text editor window
+- use the 3Dbars.py script and make sure to import pvol_king.csv and pvol_queen.csv separately
+- export entire block or separate streets as .obj or .stl files
+* Preparing 3D Data Maps
+We are going to work with data from the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#8c732154-5012-9afe-d0cd-ba3ffc813d5a][2016 Neighbourhood Profiles Dataset]]. I've already cleaned and processed the dataset so it will play nice with QGIS. The raw and processed .csv files are in the data directory. 
+
+*If you're going to use Excel or Calc, here are some steps to follow:*
+- data setup http://www.qgis.nl/2012/07/13/koppelen-van-data-uit-csv-bestand/?lang=en
+- cut the row you want and paste special into a new document. transpose the row into a column. 
+- in order to get appropriate scale in later 3D model, concatenate a decimal and zero to cell and copy down the column (could also change the shapefile size parameters in qgis). 
+- cut the column and paste special it
+- (right click to) format first column and make sure it has leading zeroes to match the id values in the shapefile
+- make sure you have a csvt and follow formula in current one https://anitagraser.com/2011/03/07/how-to-specify-data-types-of-csv-columns-for-use-in-qgis/
+
+*Here are some additional things you can do with pandas and numpy to change scales.* 
+
+Import the data:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+df = pd.read_csv('data/neighbourhood_pop.csv', dtype=str) # dtype str will keep the leading zeroes
+df.head()
+#+END_SRC
+#+RESULTS:
+
+Set index to ID:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+df.set_index('id', inplace=True)
+#+END_SRC
+#+RESULTS:
+
+Convert strings to floats in order to use numpy functions:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+df['2011'] = df['2011'].astype(str).astype(float)
+df['2016'] = df['2016'].astype(str).astype(float)
+#+END_SRC
+#+RESULTS:
+
+Use numpy to convert 2016 to square:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+df['2016'] = np.sqrt(df['2016'])
+df.head()
+#+END_SRC
+#+RESULTS:
+
+Use numpy to convert 2011 to logarithmic:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+df['2011'] = np.log10(df['2011'])
+#+END_SRC
+#+RESULTS:
+
+Output a new data file that can be imported into QGIS:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+df.to_csv('data/neighbourhood_pop_scaled.csv')
+#+END_SRC
+#+RESULTS:
+
+*in QGIS:*
+- download the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#a45bd45a-ede8-730e-1abc-93105b2c439f][neighbourhoods shapefile]] - you want the WGS84 coordinate system (I've included the files you need in the data directory)
+- use ctrl-shift-v to add vector layer
+- select the entire .zip that you downloaded
+- import neighbourhood_pop.csv as a vector layer (not as a delimited one)
+- join data from csv to existing shapefile https://gis.stackexchange.com/questions/182281/how-to-join-data-from-excel-to-an-attribute-table-in-qgis-without-creating-dupli
+- save a new shapefile and edit column names if you wish
+
+*in Blender:*
+- Make sure you have the BlenderGIS plugin installed: https://github.com/domlysz/BlenderGIS
+- set extrusion to the specific data column
+- extrude along z axis
+- if you want, separate the objects and create object names from the id field
+- change coordinates to WGS84 latlon
+- add a base or make the objects solid (use solidify modifier) if you want
+* Preparing to 3D Print
 Some blender tips:
-- 
-- 
+
+- installing braille https://blender.stackexchange.com/questions/39437/braille-text-in-blender
+- go into the text editor stuff and find the font to load
+- go into edit mode and extrude/bevel accordingly
 
 There are numerous software applications that you might use for preparing models prior to setting them up to print. Among them, I recommend meshlab http://www.meshlab.net/, meshmixer http://www.meshmixer.com/, and cotangent https://www.cotangent.io/.
 * Printing Considerations
