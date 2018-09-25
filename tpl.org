@@ -34,7 +34,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.plotly as py
 import plotly.graph_objs as go
-from IPython.display import Image
 #+END_SRC
 
 Import your data:
@@ -278,7 +277,8 @@ Depending on the data you use, you might have to re-scale to make it printable. 
 
 #+ipynb-newcell
 #+BEGIN_SRC ipython
-Image(filename='images/ladder2.gif') 
+%%html
+<img src="images/ladder2.gif"> 
 #+END_SRC
 #+RESULTS:
 
