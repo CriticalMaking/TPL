@@ -4,25 +4,26 @@
 #+ox-ipynb-keyword-metadata: key1 key2
 
 * Introduction
-This tutorial presents a few options for preparing 3D-printed visualizations from datasets available through the City of Toronto's [[https://portal0.cf.opendata.inter.sandbox-toronto.ca/][Open Data Portal]]. 
+This tutorial presents a few basic options for preparing 3D-printed visualizations from datasets that are available through the City of Toronto's [[https://portal0.cf.opendata.inter.sandbox-toronto.ca/][Open Data Portal]]. 
 * Preparation
-Most of the processes used are software/language agnostic, but I strongly recommend getting a baseline understanding of the modern Python data science ecosystem in order to fully appreciate the possibilities for multimodal data representation that it affords. That said, here are some initial pieces you'll want to get set up:  
-- Make sure you have a working Python installation! Download Anaconda if you don't already have a Python installation (and follow its setup instructions): https://www.anaconda.com/download/
-- You will need to install the following Python libraries: pandas, numpy, stat, matplotlib, seaborn, plotly. If you are using Anaconda, use conda install from a command line. Alternatively, use pip or easy install.
-- There is a difference between Python 2 and 3. You might need to familiarize yourself with this, depending on which version you install. 
-- Download and set up JupyterLab and/or Jupyter Notebook: https://anaconda.org/conda-forge/jupyterlab
-- Download Blender if you don't have 3D modeling software (e.g. Maya): https://www.blender.org/download/
+Most of the processes used are software/language agnostic, but we strongly encourage you to acquire a baseline understanding of the modern Python data science ecosystem. These are a few important pieces that you'll want to set up:  
+- Make sure you have a working Python installation! Download Anaconda and follow its setup instructions if you don't already have a Python installation: https://www.anaconda.com/download/
+- You will need to install the following Python libraries: pandas, numpy, stat, matplotlib, seaborn, plotly. If you are using Anaconda, use "conda install-c anaconda /package-name/" from a command line. Alternatively, use pip or easy_install or apt-get install python-/package-name/.
+- There is a difference between Python 2 and 3. You may need to familiarize yourself with it, depending on which version you decide to install. 
+- Download and set up JupyterLab and/or Jupyter Notebook: https://github.com/jupyterlab/jupyterlab
+- Download Blender if you don't already use 3D modeling software (e.g. Maya): https://www.blender.org/download/
 - Download QGIS if you want to create maps and other geospatial data representations: https://qgis.org/en/site/forusers/download.html
 * Data Sources
-We will be taking data from the City of Toronto's portal, but there are various other interesting datasets that you might consider working with: you can collect and use your own biometric/self-tracking data if you use a wearable device like a fitbit; kaggle provides lots of awesome datasets (the pokemon one is fun if you're working with kids): https://kaggle.com/datasets; google has a dataset search tool: https://toolbox.google.com/datasetsearch; 538 has plenty of interesting social and sports-related datasets: https://data.fivethirtyeight.com/; you might also scan the Open North community: https://github.com/opennorth.
+We will be using data from the City of Toronto's portal, but there are various other interesting datasets that you might consider working with. For example, you can collect and use your own biometric/self-tracking data if you have a wearable device like a fitbit. Kaggle provides lots of awesome datasets (the pokemon one is fun if you're working with kids): https://kaggle.com/datasets. Google has a dataset search tool: https://toolbox.google.com/datasetsearch. 538 has plenty of interesting political, social, and sports-related datasets: https://data.fivethirtyeight.com/. You might also familiarize yourself with the Open North community: https://github.com/opennorth.
 
-That said, I would recommend starting with a simple dataset, or spending plenty of time familiarizing yourself with a dataset in a spreadsheet before moving to pandas dataframes (even though I have included some very basic cleaning functions in the notebook cells below). There are various tools you can use to clean/munge/prepare your data, including Excel, Libre Office Calc, R, etc. I prefer pandas, a Python library for data analysis. There are numerous excellent tutorials that detail how to import and prepare data (using pandas) in an iPython/Jupyter notebook. Your best bet is to do the free datacamp tutorials if you're completely new to this stuff: https://www.datacamp.com/community/tutorials/pandas-tutorial-dataframe-python
+There are various tools you can use to clean/munge/prepare your data, including Excel, Libre Office Calc, R, and many more. We prefer pandas, a Python library for data analysis. There are lots of great tutorials that will outline how to import and prepare data with pandas in an iPython/Jupyter notebook. Your best bet is to do the free datacamp tutorials if you're completely new to this stuff: https://www.datacamp.com/community/tutorials/pandas-tutorial-dataframe-python
+That said, we recommend either starting with something simple or spending plenty of time familiarizing yourself with a dataset in a spreadsheet application before moving to pandas dataframes (even though we have included some very basic cleaning functions in the notebook cells below). 
 
-For this exercise, we will be working with pedestrian data from the King Street Pilot Project. All data was scraped from the .pdf reports that the city of Toronto has made available here: https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/king-street-pilot/data-reports-background-materials/
-The data is available in the data directory of the repository that contains this file.  
+For this exercise, we will be working with pedestrian data from the King Street Pilot Project. We scraped all the data from the monthly .pdf reports that city of Toronto has made available here: https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/king-street-pilot/data-reports-background-materials/
+The data is available in the /data/ directory of the repository that contains this file.  
 * Working with Data in a Python/Jupyter Notebook
 
-Import the necessary libraries:
+Start by importing the necessary libraries:
 #+BEGIN_SRC ipython 
 import pandas as pd
 import numpy as np
@@ -33,13 +34,13 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 #+END_SRC
 
-Set the figure size for charts:
+If you want, you can set a default figure size for charts:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 plt.rcParams['figure.figsize'] = [10, 8]
 #+END_SRC
 
-Import your data:
+Next, import your data. We have included a cleaned version of the dataset in the /data/ directory. pvol is what is referred to as a "dataframe" in pandas terminology. You will often see the variable name df (e.g. df = pd.read_csv('example.csv')).
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 pvol = pd.read_csv('data/king_pedestrian_volume.csv')
@@ -52,7 +53,7 @@ pvol.set_index('street')
 #+END_SRC
 #+RESULTS:
 
-Create some objects for each street. Normally, I wouldn't want such long names (and wide dataframes), but explaining the hows and whys of reshaping data takes too long. If you're interested, read Hadley Wickham's papers on the subject (http://vita.had.co.nz/papers/tidy-data.html) or follow these instructions for reshaping in pandas: https://pandas.pydata.org/pandas-docs/stable/reshaping.html
+Create some objects for each street. Normally, we wouldn't want such long names (and wide dataframes), but explaining the hows and whys of reshaping data is not in the scope of this tutorial. If you're interested, read Hadley Wickham's papers on the subject (http://vita.had.co.nz/papers/tidy-data.html) or follow these instructions for reshaping data in pandas: https://pandas.pydata.org/pandas-docs/stable/reshaping.html
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 #### am objects
@@ -139,7 +140,7 @@ pvol_jarvis_pm = pvol[['street',
 #+END_SRC
 #+RESULTS:
 
-Using the standard pandas plotting functions (which rely on matplotlib), you can prepare bare-bones static charts (use matplotlib or seaborn if you want to customize):
+Using the standard pandas plotting functions (which rely on matplotlib), you can prepare bare-bones static charts (you might use matplotlib or seaborn if you want greater customization options). There are lots of ways to adjust the colours if you want, but we like our charts to look like life savers ;-)
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 pvol_bathurst_am.plot.bar(x='street', 
@@ -149,7 +150,7 @@ pvol_bathurst_am.plot.bar(x='street',
 #+END_SRC
 #+RESULTS:
 
-If you want horizontal charts, you can chain barh to the plot method:
+If you want horizontal charts, you can feed barh to the plot method:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 pvol_bathurst_am.plot.barh(x='street', 
@@ -160,9 +161,7 @@ plt.gca().invert_yaxis();
 #+END_SRC
 #+RESULTS:
 
-There are lots of ways to adjust the colours if you want, but I like my charts to look like life savers ;-)
-
-Far more interesting, though, is the potential for creating interactive charts inside a notebook. There are lots of libraries you can use (such as Bokeh or Pygal), but I find Plotly to be the most well-developed. It also has an easy-to-use web portal. What we're going to do is create a grouped bar chart using the Plotly python library.
+Far more interesting and useful is the potential for creating interactive charts inside a notebook. There are various libraries you can use (such as Bokeh or Pygal), but we find Plotly to be the most well-developed. It also has an easy-to-use web portal. What we're going to do next is create a grouped bar chart using Plotly's python library.
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 #### plotly-based grouped bar charts
@@ -224,15 +223,15 @@ py.iplot(fig, filename='grouped-bar')
 #+END_SRC
 #+RESULTS:
 
-The dataframe provides data for the 7-10 am and 4-7 pm peak periods at the intersections Bathurst, Spadina, Bay, and Jarvis at both King and Queen. Change your arguments accordingly to prepare different charts.
+This chart displays monthly average pedestrian counts for the morning rush at the intersections Bathurst/Queen and Bathurst/King. The dataframe provides options for the 7-10 am and 4-7 pm peak periods at the intersections of Bathurst, Spadina, Bay, and Jarvis (at both King and Queen). Change your arguments accordingly to prepare different - or multiple - charts.
 * 3D Bars in Blender
-Now, let's take the same charts we prepared for the screen and render them as 3D models. This section assumes that you have the csv and bpy modules loaded in your Python ecosystem. Depending on your operating system and Python configuration, they may be pre-loaded, or you may need to install and configure separately.
+Now, let's take these same charts that we've prepared for the screen and render them as 3D models. This section assumes that you have the csv and bpy modules available in your Python ecosystem. Depending on your operating system and Python configuration, they may be pre-loaded, or you may need to install and configure separately.
 
+These steps have already been done, but are included for reference:
 - open king_pedestrian_volume.csv in a spreadsheet application (calc or excel) and copy the entire row for king
-- open a new window/file and paste special with the transpose option to turn your row of data into a column
-- remove the "king" row at the top, then save as pvol_king.csv
+- open a new window/file and "paste special" with the transpose option to turn your row of data into a column
+- remove the "king" row at the top, then save as a new file called pvol_king.csv
 - repeat these steps for queen
-- in Blender, open up a text editor window
 
 #+ipynb-newcell
 #+BEGIN_SRC ipython
@@ -241,36 +240,28 @@ Now, let's take the same charts we prepared for the screen and render them as 3D
 #+END_SRC
 #+RESULTS:
 
-- use the 3Dbars.py script and make sure to import pvol_king.csv and pvol_queen.csv separately
-- export entire block or separate streets as .obj or .stl files
+- referring to the image above, open up a "text editor" screen in Blender
+- open the 3Dbars.py script (that has been included in this repository) and use it to create 3D bars using the pvol_king.csv and pvol_queen.csv files (you'll need to run them separately)
+- when you are satisfied with the results, export an entire group or the entire street as .obj or .stl files
 * Preparing 3D Data Maps
-We are going to work with data from the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#8c732154-5012-9afe-d0cd-ba3ffc813d5a][2016 Neighbourhood Profiles Dataset]]. Specifically, we will compare population growth between 2011 and 2016 (which comes from the 2016 Census - [[https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/details/page.cfm?Lang=E&Geo1=CSD&Geo2=PR&Code2=01&Data=Count&SearchType=Begins&SearchPR=01&TABID=1&B1=All&Code1=3520005&SearchText=toronto][more info here]]). I've already cleaned and processed the dataset so it will play nice with QGIS. Both the raw and processed .csv files are in the data directory. 
+Now, we're going to switch to the recently-released [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#8c732154-5012-9afe-d0cd-ba3ffc813d5a][2016 Neighbourhood Profiles Dataset]]. (We had done a bunch of work with ward data in anticipation of the upcoming election, but it seems pretty irrelevant in light of recent events!) We're going to compare population growth between 2011 and 2016 (which is originally taken from the 2016 Census - [[https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/details/page.cfm?Lang=E&Geo1=CSD&Geo2=PR&Code2=01&Data=Count&SearchType=Begins&SearchPR=01&TABID=1&B1=All&Code1=3520005&SearchText=toronto][more info here]]). There are plenty of interesting features of this dataset that you might consider using instead of population - language concentrations, income, citizenship, etc. We've already cleaned and processed the population data so it will play nice with QGIS. The raw and processed .csv files are in the /data/ directory. 
 
-*If you're going to use Excel or Calc, here are some steps to follow:*
-- data setup http://www.qgis.nl/2012/07/13/koppelen-van-data-uit-csv-bestand/?lang=en
-- cut the row you want and paste special into a new document. transpose the row into a column. 
-- in order to get appropriate scale in later 3D model, concatenate a decimal and zero to cell and copy down the column (could also change the shapefile size parameters in qgis). 
-- cut the column and paste special it
+*If you're going to use Excel or Calc to prep data for import into QGIS, here are some important steps:*
+- read this about setting up data for QGIS http://www.qgis.nl/2012/07/13/koppelen-van-data-uit-csv-bestand/?lang=en
+- similar to the steps used with the King dataset, you'll want to cut the row you want and paste special into a new document, transposing the row into a column (this can also be done in pandas) 
+- in order to get the appropriate scale in later 3D model, concatenate a decimal and zero to cell and copy down the column (you can also change the shapefile size parameters in QGIS, but that's a taller order) 
 - (right click to) format first column and make sure it has leading zeroes to match the id values in the shapefile
-- make sure you have a csvt and follow formula in current one https://anitagraser.com/2011/03/07/how-to-specify-data-types-of-csv-columns-for-use-in-qgis/
-
-*in QGIS:*
-- download the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#a45bd45a-ede8-730e-1abc-93105b2c439f][neighbourhoods shapefile]] - you want the WGS84 coordinate system (I've included the files you need in the data directory)
-- use ctrl-shift-v to add vector layer
-- select the entire .zip that you downloaded
-- import neighbourhood_pop.csv as a vector layer (not as a delimited one)
-- join data from csv to existing shapefile https://gis.stackexchange.com/questions/182281/how-to-join-data-from-excel-to-an-attribute-table-in-qgis-without-creating-dupli
-- save a new shapefile and edit column names if you wish
-
-*in Blender:*
-- Make sure you have the BlenderGIS plugin installed: https://github.com/domlysz/BlenderGIS
-- set extrusion to the specific data column
-- extrude along z axis
-- if you want, separate the objects and create object names from the id field
-- change coordinates to WGS84 latlon
-- add a base or make the objects solid (use solidify modifier) if you want
+- make sure you have a csvt and follow the appropriate formula in current one - refer to this: https://anitagraser.com/2011/03/07/how-to-specify-data-types-of-csv-columns-for-use-in-qgis/
 
 *Here are some additional things you can do with pandas and numpy:* 
+
+Depending on the data you use, you might have to re-scale to make it printable. Refer to the following image:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+%%html
+<img src="images/ladder2.gif"> 
+#+END_SRC
+#+RESULTS:
 
 Import the data:
 #+ipynb-newcell
@@ -295,43 +286,59 @@ df['2016'] = df['2016'].astype(str).astype(float)
 #+END_SRC
 #+RESULTS:
 
-Depending on the data you use, you might have to re-scale to make it printable. Consider the following image:
-
-#+ipynb-newcell
-#+BEGIN_SRC ipython
-%%html
-<img src="images/ladder2.gif"> 
-#+END_SRC
-#+RESULTS:
-
-You can use numpy to convert to square root:
+You can use numpy to convert to square root, logarithmic, or whatever other scale you like:
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 df['2016'] = np.sqrt(df['2016'])
+df['2011'] = np.log10(df['2011'])
 df.head()
 #+END_SRC
 #+RESULTS:
 
-Or logarithmic:
-#+ipynb-newcell
-#+BEGIN_SRC ipython
-df['2011'] = np.log10(df['2011'])
-#+END_SRC
-#+RESULTS:
-
-When you're done processing, you can output a new .csv for import into QGIS:
+When you're done processing, you can output a new .csv for import into QGIS (this has already been done):
 #+ipynb-newcell
 #+BEGIN_SRC ipython
 df.to_csv('data/neighbourhood_pop_scaled.csv')
 #+END_SRC
 #+RESULTS:
-* Preparing to 3D Print
-There are numerous software applications that you might use for preparing models prior to setting them up to print. You can likely do most of your prep in Blender, though, but the learning curve is steep. 
-- Meshlab is not very user friendly, but has a million features built into it: http://www.meshlab.net/
-- Meshmixer has been the go-to for a long time, and has everything from sculpting tools to 3D print prep: http://www.meshmixer.com/
-- Cotangent is a new application from the guy who created Meshmixer. It has plenty of interesting features and is ideal for prepping 3D prints: https://www.cotangent.io/
 
-Useful Blender shortcuts:
+** Working in QGIS:
+- download the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#a45bd45a-ede8-730e-1abc-93105b2c439f][neighbourhoods shapefile]] - you'll want the WGS84 coordinate system (we've included the files you need in the /data/ directory)
+- use ctrl-shift-v to add a vector layer
+- select the entire .zip that you've downloaded and create your vector layer from it
+- import neighbourhood_pop.csv as a vector layer (not as a delimited one)
+- join data from csv to existing shapefile - refer to https://gis.stackexchange.com/questions/182281/how-to-join-data-from-excel-to-an-attribute-table-in-qgis-without-creating-dupli or the following image
+- save a new shapefile and edit column names if you wish
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+%%html
+<img src="images/qgis.gif"> 
+#+END_SRC
+#+RESULTS:
+
+** Loading your Shapefile into Blender:
+- make sure you have the BlenderGIS plugin installed and configured: https://github.com/domlysz/BlenderGIS
+- import the new shapefile that you've just created
+- set extrusion to the specific data column you want to use (in our example, 2011 or 2016 population)
+- set to extrude along z axis
+- if you want, separate the objects and create object names from the id field
+- change coordinates to WGS84 latlon
+- you might also add a base or make the objects solid (use solidify modifier) to make printing easier
+- as with the previous example, you'll want to export to .obj or .stl and make sure to set the scale, materials, and other export parameters to work with your 3D printing software (e.g. Cura, if you're using an Ultimaker)
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+%%html
+<img src="images/shapefile.gif"> 
+#+END_SRC
+#+RESULTS:
+* 3D Printing Considerations
+There are numerous software applications that you might use for preparing models prior to setting them up to print. You can likely do most of your prep in Blender, but the learning curve is steep. 
+- Meshlab is not very user friendly, but has a million features built into it (especially good for working with point clouds): http://www.meshlab.net/
+- Meshmixer has been the go-to processing tool for a long time, and has everything from sculpting tools to built-in printer export: http://www.meshmixer.com/
+- Cotangent is a new application from the guy who developed Meshmixer. It has lots of interesting features, including better repair and slicing features, and is ideal for prepping 3D prints: https://www.cotangent.io/
+
+*Some Useful Blender shortcuts:*
+
 | keys     | function                                     |
 |----------+----------------------------------------------|
 | a        | select all                                   |
@@ -341,11 +348,14 @@ Useful Blender shortcuts:
 | ctrl-g   | group selected objects                       |
 | m        | when object selected, move to specific layer |
 
-Working with braille in Blender:
-- installing braille https://blender.stackexchange.com/questions/39437/braille-text-in-blender
-- go into the text editor stuff and find the font to load
-- go into edit mode and extrude/bevel accordingly
-* Printing Considerations
-Some things to think about if you're preparing tactile models for blind users. 
-- Braille is very challenging to print. If you're using an FDM printer, be careful that traces of filament are not being dragged across the dots. 
-- Printing does not have to be static. Think about how to separate your models into individual, reconfigurable/modular chunks in order to create dynamic data representations. It is easy to 3D print lego-like connectors onto the faces of your objects. Additionally, attachable velcro tape gives you lots of options for creating modular graphics. 
+*Some things to think about if you're preparing tactile models for blind users:* 
+- here's how you can install braille font in Blender https://blender.stackexchange.com/questions/39437/braille-text-in-blender
+- you'll want to go into edit mode and extrude/bevel accordingly to make sure the dots are not too sharp
+- braille is very challenging to print - if you're using an FDM printer, be careful that traces of filament are not being dragged across the dots. you can configure your retraction, temperature, and speed settings to fix this: https://ultimaker.com/en/resources/19504-how-to-fix-stringing
+
+Printed tactile models do not have to be static! Think about how to separate your models into individual, reconfigurable/modular chunks in order to create dynamic data representations. It is easy to 3D print lego-like connectors onto the faces of your objects: https://www.thingiverse.com/search?q=lego+brick&dwh=525baba295ab0da. Additionally, attachable velcro tape gives you lots of options for creating endlessly modular graphics.
+
+Remember, once you have a digital 3D data representation, it can usually be ported to any number of interaction contexts:
+- VR and gaming environments
+- Immersive point clouds and 3D scatter plots (not particularly printable, but they can be really engaging!)
+- Haptic/conductive extensions to tactile models
