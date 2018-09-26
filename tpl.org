@@ -224,6 +224,138 @@ py.iplot(fig, filename='grouped-bar')
 #+RESULTS:
 
 This chart displays monthly average pedestrian counts for the morning rush at the intersections Bathurst/Queen and Bathurst/King. The dataframe provides options for the 7-10 am and 4-7 pm peak periods at the intersections of Bathurst, Spadina, Bay, and Jarvis (at both King and Queen). Change your arguments accordingly to prepare different - or multiple - charts.
+** Was Al Carbone Right?
+Remember this guy?
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+%%html
+<img src="images/al-carbone.jpg"> 
+#+END_SRC
+#+RESULTS:
+
+Now that the Pilot Project has been running for almost a year, is there evidence that King is the "wasteland" Al Carbone claims it to be? Let's look at the data. Here's evening (4-7 pm) pedestrian counts for Spadina... right around early dinner time:
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+# PM Spadina
+baseline = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_baseline'],
+    name='PM Spadina Baseline',
+    hoverinfo='y+name'
+)
+january = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_january'],
+    name='PM Spadina January',
+    hoverinfo='y+name'
+)
+february = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_february'],
+    name='PM Spadina February',
+    hoverinfo='y+name'
+)
+march = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_march'],
+    name='PM Spadina March',
+    hoverinfo='y+name'
+)
+april = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_april'],
+    name='PM Spadina April',
+    hoverinfo='y+name'
+)
+may = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_may'],
+    name='PM Spadina May',
+    hoverinfo='y+name'
+)
+june = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_spadina_june'],
+    name='PM Spadina June',
+    hoverinfo='y+name'
+)
+
+data = [baseline, january, february, march, april, may, june]
+layout = go.Layout(
+    barmode='group',
+    # bargap=0.15,
+    bargroupgap=0.1,
+    hovermode='closest'
+    # showlegend=False
+)
+
+fig = go.Figure(data=data, layout=layout)
+py.iplot(fig, filename='grouped-bar')
+#+END_SRC
+#+RESULTS:
+
+And here's Bay...
+#+ipynb-newcell
+#+BEGIN_SRC ipython
+# PM Bay
+baseline = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_baseline'],
+    name='PM Bay Baseline',
+    hoverinfo='y+name'
+)
+january = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_january'],
+    name='PM Bay January',
+    hoverinfo='y+name'
+)
+february = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_february'],
+    name='PM Bay February',
+    hoverinfo='y+name'
+)
+march = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_march'],
+    name='PM Bay March',
+    hoverinfo='y+name'
+)
+april = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_april'],
+    name='PM Bay April',
+    hoverinfo='y+name'
+)
+may = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_may'],
+    name='PM Bay May',
+    hoverinfo='y+name'
+)
+june = go.Bar(
+    x=pvol['street'],
+    y=pvol['pm_bay_june'],
+    name='PM Bay June',
+    hoverinfo='y+name'
+)
+
+data = [baseline, january, february, march, april, may, june]
+layout = go.Layout(
+    barmode='group',
+    # bargap=0.15,
+    bargroupgap=0.1,
+    hovermode='closest'
+    # showlegend=False
+)
+
+fig = go.Figure(data=data, layout=layout)
+py.iplot(fig, filename='grouped-bar')
+#+END_SRC
+#+RESULTS:
+
+Keep in mind that we have incomplete data, and won't be able to get a really good sense of the Pilot Project's impact without year over year data. These numbers also don't take into account things like major events (including TIFF), the impact that the Muskoka chair seating areas have had on public space use, and whether or not people are spending more or less time waiting for streetcars. While it is easy to look at the increase in pedestrian volume as evidence of the Pilot Project's success, how do we know the weather hasn't been the biggest driver (keep in mind that the baseline was captured in October)?    
 * 3D Bars in Blender
 Now, let's take these same charts that we've prepared for the screen and render them as 3D models. This section assumes that you have the csv and bpy modules available in your Python ecosystem. Depending on your operating system and Python configuration, they may be pre-loaded, or you may need to install and configure separately.
 
