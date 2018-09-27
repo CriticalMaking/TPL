@@ -8,7 +8,7 @@ This tutorial presents a few basic options for preparing 3D-printed visualizatio
 * Preparation
 Most of the processes used are software/language agnostic, but we strongly encourage you to acquire a baseline understanding of the modern Python data science ecosystem. These are a few important pieces that you'll want to set up:  
 - Make sure you have a working Python installation! Download Anaconda and follow its setup instructions if you don't already have a Python installation: https://www.anaconda.com/download/
-- You will need to install the following Python libraries: pandas, numpy, stat, matplotlib, seaborn, plotly. If you are using Anaconda, use "conda install-c anaconda /package-name/" from a command line. Alternatively, use pip or easy_install or apt-get install python-/package-name/.
+- You will need to install the following Python libraries: pandas, numpy, stat, matplotlib, seaborn, plotly. If you are using Anaconda, use "conda install -c anaconda /package-name/" from a command line. Alternatively, use pip or easy_install or apt-get install python-/package-name/.
 - There is a difference between Python 2 and 3. You may need to familiarize yourself with it, depending on which version you decide to install. 
 - Download and set up JupyterLab and/or Jupyter Notebook: https://github.com/jupyterlab/jupyterlab
 - Download Blender if you don't already use 3D modeling software (e.g. Maya): https://www.blender.org/download/
@@ -434,7 +434,7 @@ df.to_csv('data/neighbourhood_pop_scaled.csv')
 #+END_SRC
 #+RESULTS:
 
-** Working in QGIS:
+** Working in QGIS
 - download the [[https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-catalogue/#a45bd45a-ede8-730e-1abc-93105b2c439f][neighbourhoods shapefile]] - you'll want the WGS84 coordinate system (we've included the files you need in the /data/ directory)
 - use ctrl-shift-v to add a vector layer
 - select the entire .zip that you've downloaded and create your vector layer from it
@@ -448,7 +448,7 @@ df.to_csv('data/neighbourhood_pop_scaled.csv')
 #+END_SRC
 #+RESULTS:
 
-** Loading your Shapefile into Blender:
+** Loading your Shapefile into Blender
 - make sure you have the BlenderGIS plugin installed and configured: https://github.com/domlysz/BlenderGIS
 - import the new shapefile that you've just created
 - set extrusion to the specific data column you want to use (in our example, 2011 or 2016 population)
